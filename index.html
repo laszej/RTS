@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prosty RTS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #4c8;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1, p {
+            text-align: center;
+            color: white;
+        }
+
+        #game {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            border: 2px solid black;
+            background: #ff00ff;
+            overflow: hidden;
+        }
+
+        .unit {
+            width: 15vmin;
+            height: 15vmin;
+            background-image: url('tank.gif');
+            background-size: cover;
+            position: absolute;
+            transition: top 0.5s linear, left 0.5s linear;
+        }
+
+        .building {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: gray;
+        }
+
+        .resource {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: gold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Prosty RTS</h1>
+    <p>Kliknij na jednostkę, a następnie na miejsce docelowe, aby ją przesunąć.</p>
+    <div id="game">
+        <div id="unit1" class="unit" style="top: 50px; left: 50px;"></div>
+        <div id="building1" class="building" style="top: 200px; left: 200px;"></div>
+        <div id="resource1" class="resource" style="top: 100px; left: 300px;"></div>
+    </div>
+
+    <script>
+        let selectedUnit = null;
+
+        // Wybieranie jednostki po kliknięciu
+        document.querySelectorAll('.unit').forEach(unit => {
+            unit.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedUnit = unit;
+            });
+        });
+
+        // Przesuwanie jednostki po kliknięciu na planszę
+        document.getElementById('game').addEventListener('click', (e) => {
+            if (selectedUnit) {
+                let game = document.getElementById('game');
+
+                let newX = e.pageX - game.offsetLeft - selectedUnit.clientWidth / 2;
+                let newY = e.pageY - game.offsetTop - selectedUnit.clientHeight / 2;
+
+                // Obracanie w zależności od kierunku ruchu
+                let unitX = parseInt(selectedUnit.style.left) || 0;
+                if (unitX < newX) {
+                    selectedUnit.style.transform = "scaleX(1)"; // W prawo
+                } else {
+                    selectedUnit.style.transform = "scaleX(-1)"; // W lewo
+                }
+
+                selectedUnit.style.left = newX + 'px';
+                selectedUnit.style.top = newY + 'px';
+            }
+        });
+    </script>
+</body>
+</html>
